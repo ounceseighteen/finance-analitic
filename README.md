@@ -36,6 +36,9 @@ http://localhost:3000
 
 ### История всех операций
 
+<img width="820" height="433" alt="image" src="https://github.com/user-attachments/assets/4bb47a78-66f3-4cd6-a862-fd3e69fe6dc9" />
+
+
 ### Импорт/экспорт в Excel
 
 
