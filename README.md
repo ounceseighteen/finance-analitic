@@ -17,24 +17,25 @@ http://localhost:3000
 ## Структура проекта
 <img width="729" height="204" alt="image" src="https://github.com/user-attachments/assets/f02784e2-05e0-466e-b66c-de42eb1cdf70" />
 
+
 ## Возможности
-Регистрация и авторизация пользователей
+### Регистрация и авторизация пользователей
 
 <img width="432" height="505" alt="image" src="https://github.com/user-attachments/assets/833159e4-cbc5-443a-a735-6864cfad956e" />
 <img width="470" height="486" alt="image" src="https://github.com/user-attachments/assets/b74d1cf0-b04b-418c-852a-cbd1c4a678e4" />
 
-Учёт доходов и расходов
+
+### Учёт доходов и расходов
 
 <img width="828" height="271" alt="image" src="https://github.com/user-attachments/assets/ab4712b5-21af-43da-8473-668671f0d7e2" />
 
-Визуализация расходов по категориям
+
+### Визуализация расходов по категориям
 
 <img width="842" height="184" alt="image" src="https://github.com/user-attachments/assets/b1ed4a54-fd09-4644-bd9f-145700532bdd" />
 
-История всех операций
+### История всех операций
 
-Импорт/экспорт в Excel
+### Импорт/экспорт в Excel
 
-Удаление операций
 
-Автоматический расчёт баланса
