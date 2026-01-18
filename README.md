@@ -41,4 +41,7 @@ http://localhost:3000
 
 ### Импорт/экспорт в Excel
 
+<img width="828" height="714" alt="image" src="https://github.com/user-attachments/assets/d8a7d151-3d94-47cc-97a7-7bd43b3b6fe1" />
+
+
 
