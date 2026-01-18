@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Импорт/Экспорт данных</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .file-input-wrapper {
+            position: relative;
+            margin-bottom: 15px;
+        }
+        .file-input-wrapper input[type="file"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .remove-file {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #dc3545;
+            font-size: 20px;
+            cursor: pointer;
+            display: none;
+        }
+        .file-name {
+            margin-top: 5px;
+            color: #666;
+            font-size: 14px;
+        }
+        .instructions {
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        .instructions h4 {
+            margin-top: 0;
+            color: #007bff;
+        }
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+            border: 1px solid #c3e6cb;
+        }
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+            border: 1px solid #f5c6cb;
+        }
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .action-card {
+            padding: 20px;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .action-card h3 {
+            margin-top: 0;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .action-card h3 i {
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Импорт/Экспорт данных</h1>
+
+        <div class="nav-links">
+            <a href="{{ url_for('index') }}">Главная</a>
+            <a href="{{ url_for('add_transaction') }}">Добавить</a>
+            <a href="{{ url_for('history') }}">История</a>
+            <a href="{{ url_for('import_export') }}" class="active">Импорт/Экспорт</a>
+            <span style="margin-left: auto; color: #333;">
+                Привет, {{ session.username }}!
+            </span>
+            <a href="{{ url_for('logout') }}" style="color: #dc3545;">Выйти</a>
+        </div>
+
+        {% if success %}
+        <div class="success-message">
+            <h3>✅ Импорт завершен успешно!</h3>
+            <p>Добавлено <strong>{{ count }}</strong> операций.</p>
+            {% if errors %}
+            <p>Ошибки при импорте:</p>
+            <ul>
+                {% for error in errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% if error %}
+        <div class="error-message">
+            <h3>❌ Ошибка импорта</h3>
+            <p>{{ error }}</p>
+        </div>
+        {% endif %}
+
+        <div class="action-buttons">
+            <!-- Карточка импорта -->
+            <div class="action-card">
+                <h3>📥 Импорт данных</h3>
+                <p>Загрузите Excel файл с вашими операциями</p>
+
+                <div class="instructions">
+                    <h4>📋 Формат файла</h4>
+                    <ul>
+                        <li><strong>Дата</strong> - в формате ДД.ММ.ГГГГ (например: 15.01.2024)</li>
+                        <li><strong>Тип</strong> - "Доход" или "Расход"</li>
+                        <li><strong>Категория</strong> - категория операции</li>
+                        <li><strong>Сумма</strong> - число (для расходов можно ставить минус)</li>
+                        <li><strong>Описание</strong> - необязательно</li>
+                    </ul>
+                </div>
+
+                <form method="POST" enctype="multipart/form-data" id="importForm">
+                    <div class="form-group">
+                        <label>Выберите файл:</label>
+                        <div class="file-input-wrapper">
+                            <input type="file" id="fileInput" name="file" accept=".xlsx,.xls" required>
+                            <button type="button" class="remove-file" id="removeFileBtn" title="Удалить файл">×</button>
+                        </div>
+                        <div class="file-name" id="fileName"></div>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="submit" class="btn-primary">📥 Начать импорт</button>
+                        <a href="{{ url_for('download_template') }}" class="btn-secondary">📋 Скачать шаблон</a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Карточка экспорта -->
+            <div class="action-card">
+                <h3>📤 Экспорт данных</h3>
+                <p>Скачайте все ваши операции в Excel файл</p>
+
+                <div class="instructions">
+                    <h4>📊 Что будет в файле:</h4>
+                    <ul>
+                        <li>Лист "Операции" - все ваши доходы и расходы</li>
+                        <li>Лист "Сводка" - общая статистика</li>
+                        <li>Даты в формате ДД.ММ.ГГГГ</li>
+                        <li>Типы операций на русском языке</li>
+                        <li>Суммы расходов с минусом</li>
+                    </ul>
+                </div>
+
+                <div class="button-group">
+                    <a href="{{ url_for('export_excel') }}" class="btn-primary">📤 Экспортировать в Excel</a>
+                    <a href="{{ url_for('history') }}" class="btn-secondary">📋 Посмотреть историю</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Обработка выбора файла
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const fileName = this.files[0] ? this.files[0].name : '';
+            const fileNameDisplay = document.getElementById('fileName');
+            const removeBtn = document.getElementById('removeFileBtn');
+
+            if (fileName) {
+                fileNameDisplay.textContent = `Выбран файл: ${fileName}`;
+                removeBtn.style.display = 'block';
+            } else {
+                fileNameDisplay.textContent = '';
+                removeBtn.style.display = 'none';
+            }
+        });
+
+        // Обработка кнопки удаления файла
+        document.getElementById('removeFileBtn').addEventListener('click', function() {
+            const fileInput = document.getElementById('fileInput');
+            const fileNameDisplay = document.getElementById('fileName');
+            const removeBtn = document.getElementById('removeFileBtn');
+
+            fileInput.value = '';
+            fileNameDisplay.textContent = '';
+            removeBtn.style.display = 'none';
+        });
+
+        // Подтверждение импорта
+        document.getElementById('importForm').addEventListener('submit', function(e) {
+            const fileInput = document.getElementById('fileInput');
+            if (fileInput.files.length === 0) {
+                e.preventDefault();
+                alert('Пожалуйста, выберите файл для импорта');
+                return false;
+            }
+
+            return confirm('Начать импорт данных из выбранного файла?');
+        });
+    </script>
+</body>
+</html>
