@@ -19,6 +19,7 @@ http://localhost:3000
 
 ## Возможности
 Регистрация и авторизация пользователей
+
 <img width="432" height="505" alt="image" src="https://github.com/user-attachments/assets/833159e4-cbc5-443a-a735-6864cfad956e" />
 <img width="470" height="486" alt="image" src="https://github.com/user-attachments/assets/b74d1cf0-b04b-418c-852a-cbd1c4a678e4" />
 
