@@ -25,6 +25,8 @@ http://localhost:3000
 
 Учёт доходов и расходов
 
+<img width="841" height="425" alt="image" src="https://github.com/user-attachments/assets/2e00ce51-7b66-4244-81b4-c4a37b479ded" />
+
 Визуализация расходов по категориям
 
 История всех операций
